@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Your Resume</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <div class="content">
+                <h1>Finish!</h1>
+                <h2>Upload Your Resume</h2>
+                <p>Upload your resume, the platform will help you parse and optimize, you can also skip this step</p>
+            </div>
+            <div class="illustration">
+                <svg width="320" height="280" viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 蓝色机器人身体 -->
+                    <ellipse cx="90" cy="220" rx="50" ry="40" fill="#4A90E2"/>
+                    
+                    <!-- 机器人头部 -->
+                    <circle cx="90" cy="170" r="28" fill="#4A90E2"/>
+                    <circle cx="84" cy="164" r="4" fill="white"/>
+                    <circle cx="96" cy="164" r="4" fill="white"/>
+                    
+                    <!-- 机器人手臂和连接线 -->
+                    <rect x="118" y="180" width="90" height="10" rx="5" fill="#4A90E2"/>
+                    <rect x="200" y="160" width="10" height="50" rx="5" fill="#4A90E2"/>
+                    
+                    <!-- 白色文档/设备 -->
+                    <rect x="130" y="140" width="70" height="50" rx="6" fill="white" stroke="#E0E0E0" stroke-width="2"/>
+                    <circle cx="142" cy="155" r="3" fill="#E0E0E0"/>
+                    <circle cx="154" cy="155" r="3" fill="#E0E0E0"/>
+                    <circle cx="166" cy="155" r="3" fill="#E0E0E0"/>
+                    <circle cx="178" cy="155" r="3" fill="#E0E0E0"/>
+                    <line x1="140" y1="170" x2="180" y2="170" stroke="#E0E0E0" stroke-width="2"/>
+                    <line x1="140" y1="178" x2="170" y2="178" stroke="#E0E0E0" stroke-width="2"/>
+                    
+                    <!-- 黑色设备 -->
+                    <rect x="215" y="190" width="60" height="30" rx="6" fill="#333"/>
+                    <circle cx="228" cy="205" r="3" fill="white"/>
+                    <circle cx="242" cy="205" r="3" fill="white"/>
+                    <circle cx="256" cy="205" r="3" fill="white"/>
+                    <circle cx="270" cy="205" r="3" fill="white"/>
+                    
+                    <!-- 火箭 -->
+                    <polygon points="285,90 295,130 275,130" fill="#E0E0E0"/>
+                    <rect x="280" y="130" width="10" height="35" fill="#E0E0E0"/>
+                    <polygon points="275,165 285,175 295,165" fill="#FF6B6B"/>
+                    
+                    <!-- 装饰圆圈 -->
+                    <circle cx="60" cy="120" r="18" fill="#4A90E2" opacity="0.3"/>
+                    <circle cx="250" cy="100" r="12" fill="#4A90E2" opacity="0.2"/>
+                    
+                    <!-- 底部装饰 -->
+                    <rect x="50" y="240" width="25" height="10" rx="5" fill="#4A90E2" opacity="0.5"/>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="right-section">
+            <div class="upload-container">
+                <h3>Upload file</h3>
+                <div class="upload-area" id="uploadArea" tabindex="0" role="button" aria-label="点击或拖拽文件到此区域上传简历">
+                    <div class="upload-icon">
+                        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="#4A90E2" stroke-width="2" fill="none"/>
+                            <polyline points="14,2 14,8 20,8" stroke="#4A90E2" stroke-width="2" fill="none"/>
+                            <path d="M12 18V12M9 15L12 12L15 15" stroke="#4A90E2" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <p class="upload-text">Drag your resume file to this area, or click on this area to select the appropriate file to upload</p>
+                    <input type="file" id="fileInput" accept=".pdf,.doc,.docx" hidden>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-secondary">Last step</button>
+                    <button class="btn btn-primary">Finish</button>
+                </div>
+                
+                <div class="progress-indicator">
+                    <div class="step completed"></div>
+                    <div class="step-line completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step-line completed"></div>
+                    <div class="step current"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        let currentFile = null;
+
+        // 检测移动设备并添加类名
+        function detectMobile() {
+            if (window.innerWidth <= 768) {
+                document.body.classList.add('mobile');
+            } else {
+                document.body.classList.remove('mobile');
+            }
+        }
+
+        // 初始检测和窗口大小变化监听
+        detectMobile();
+        window.addEventListener('resize', detectMobile);
+
+        // 点击上传区域
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // 拖拽事件处理
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', (e) => {
+            if (!uploadArea.contains(e.relatedTarget)) {
+                uploadArea.classList.remove('dragover');
+            }
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // 文件选择事件
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // 处理文件上传
+        function handleFile(file) {
+            // 验证文件类型
+            const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('请选择PDF或Word文档文件');
+                return;
+            }
+
+            // 验证文件大小 (5MB限制)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('文件大小不能超过5MB');
+                return;
+            }
+
+            currentFile = file;
+            displayFileInfo(file);
+            uploadArea.classList.add('file-uploaded');
+        }
+
+        // 显示文件信息
+        function displayFileInfo(file) {
+            const fileSize = formatFileSize(file.size);
+            uploadArea.innerHTML = `
+                <div class="upload-icon">
+                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="#48bb78" stroke-width="2" fill="none"/>
+                        <polyline points="14,2 14,8 20,8" stroke="#48bb78" stroke-width="2" fill="none"/>
+                        <path d="M9 15L11 17L15 13" stroke="#48bb78" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-size">${fileSize}</div>
+                </div>
+                <p style="color: #48bb78; margin-top: 12px; font-weight: 500;">文件上传成功！点击重新选择</p>
+            `;
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 按钮事件
+        document.querySelector('.btn-primary').addEventListener('click', () => {
+            if (currentFile) {
+                alert(`准备提交文件: ${currentFile.name}`);
+                // 这里可以添加实际的文件上传逻辑
+            } else {
+                alert('请先选择一个文件');
+            }
+        });
+
+        document.querySelector('.btn-secondary').addEventListener('click', () => {
+            alert('返回上一步');
+            // 这里可以添加返回逻辑
+        });
+
+        // 键盘无障碍支持
+        uploadArea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
+    </script>
+</body>
+</html>
